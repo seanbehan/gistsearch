@@ -15,7 +15,6 @@ if path.exists("./ENV"):
 q = Queue(connection=conn)
 db = connect(env.get('DATABASE_URL'))
 
-# 396b224e167926e5c8bb62a95158bc514b519365
 def gists(access_token=None):
     i = 0
     gists = []
