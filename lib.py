@@ -46,10 +46,3 @@ def save_file(data):
     access_token = data['access_token']
     f['content'] = get(f['raw_url'], headers = {'Authorization': 'token %s'%access_token}).content
     db['files'].upsert(f, ['gist_id', 'filename'])
-
-
-def save_gist(url):
-    gist_id = '1d04edad3409812dcb35'
-    access_token = '396b224e167926e5c8bb62a95158bc514b519365'
-    data = get('https://api.github.com/gists/%s?access_token=%s' % (gist_id, access_token)).json()
-    pass
