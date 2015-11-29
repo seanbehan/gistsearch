@@ -1,7 +1,7 @@
 from flask import Flask, render_template as render, request, redirect, jsonify
 from os import environ as env, path
 from requests import post
-from urllib import urlencode, unquote
+from urllib import urlencode, unquote, quote
 from urlparse import parse_qs
 from lib import db, gists, save_gists
 from rq import Queue
@@ -12,13 +12,28 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render('home.html')
+    files = [f for f in db.query('select distinct language from files') if f['language']]
+    return render('home.html', files=files)
 
-@app.route("/gists.json")
-def gists():
-    return jsonify(
-        gists=[g for g in db['gists'].all()]
-    )
+@app.route("/search")
+def search():
+    q = request.args.get('desc')
+    gists = [gist for gist in db.query('select * from gists where description ~* :q', q=q)]
+    return render('search.html', gists=gists)
+
+@app.route("/language")
+def language():
+    q = request.args.get('lgn')
+    gists = [gist for gist in db.query('select distinct (f.gist_id, f.filename), g.*,f.* from gists g join files f on g.gist_id = f.gist_id where f.language = :q order by f.gist_id,f.filename', q=q)]
+
+    return render('search.html', gists=gists)
+
+@app.route("/file_contents")
+def file_contents():
+    q = unquote(request.args.get('txt'))
+    gists = [gist for gist in db.query('select distinct (g.gist_id), * from gists g, files f where g.gist_id = f.gist_id and f.content ilike :q', q="%"+q+"%")]
+    return render('search.html', gists=gists)
+
 
 @app.route("/authorize")
 def authorize():

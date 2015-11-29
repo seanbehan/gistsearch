@@ -1,0 +1,16 @@
+{% extends 'home.html' %}
+
+{% block main %}
+<ul>
+  {% for gist in gists %}
+    <li>
+      <a href="{{gist.html_url}}" target="_blank">
+        {{gist.language}}
+        {{gist.description}}
+        <!-- {{gist.filename}} -->
+        <small>({{gist.gist_id}})</small>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+{% endblock %}

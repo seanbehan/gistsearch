@@ -5,6 +5,30 @@
     <title>Gist Search</title>
   </head>
   <body>
-    <a href="/authorize">Authorize This App to Access Your Gists (Readonly)</a>
+    <p>
+      <a href="/">Home</a>
+      <a href="/authorize">Authorize This App to Access Your Gists</a>
+    </p>
+    <form class="" action="/search" method="get">
+      <label>Search Gists by Description</label>
+      <input type="text" name="desc" value="{{request.args.get('desc', '')}}">
+      <button>Go</button>
+    </form>
+
+    <form class="" action="/file_contents" method="get">
+      <label>Search Gists by File Contents</label>
+      <input type="text" name="txt" value="{{request.args.get('txt', '')}}">
+      <button>Go</button>
+    </form>
+
+    {%block main %}
+    <ul>
+      {% for file in files %}
+        <li>
+          <a href="/language?lgn={{file.language}}">{{file.language}}</a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endblock %}
   </body>
 </html>
