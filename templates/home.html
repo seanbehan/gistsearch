@@ -3,12 +3,19 @@
   <head>
     <meta charset="utf-8">
     <title>Gist Search</title>
+    <link rel="stylesheet" href="/static/style.css" media="screen" title="no title" charset="utf-8">
   </head>
   <body>
-    <p>
-      <a href="/">Home</a>
-      <a href="/authorize">Authorize This App to Access Your Gists</a>
-    </p>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/authorize" class="button"><i class="fa fa-refresh"></i> Refresh Gists</a></li>
+      <li>
+        <form action="/logout" method="post">
+          <button><i class="fa fa-power-off"></i> Logout</button>
+        </form>
+      </li>
+    </ul>
+
     <form class="" action="/search" method="get">
       <label>Search Gists by Description</label>
       <input type="text" name="desc" value="{{request.args.get('desc', '')}}">
@@ -22,13 +29,15 @@
     </form>
 
     {%block main %}
-    <ul>
-      {% for file in files %}
-        <li>
-          <a href="/language?lgn={{file.language}}">{{file.language}}</a>
-        </li>
-      {% endfor %}
-    </ul>
+      <ul>
+        <h3>Languages</h3>
+        {% for file in files %}
+          <li>
+            <a href="/language/{{file.language}}">{{file.language}}</a>
+          </li>
+        {% endfor %}
+      </ul>
     {% endblock %}
+
   </body>
 </html>
